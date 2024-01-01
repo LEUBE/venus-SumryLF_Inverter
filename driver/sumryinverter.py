@@ -28,19 +28,19 @@ logging.basicConfig(
 
 # connect and register to dbus
 driver = {
-	'name'        : "Chargery BMS",
-	'servicename' : "chargerybms",
+	'name'        : "Sumry Inverter",
+	'servicename' : "sumryinverter",
 	'instance'    : 1,
 	'id'          : 0x01,
-	'version'     : 1.5,
-	'serial'      : "CHGBMS11062020A1",
-	'connection'  : "com.victronenergy.battery.ttyCHGBMS01"
+	'version'     : 0.0,
+	'serial'      : "0000000000",
+	'connection'  : "com.victronenergy.multi.ttyUSB01"
 }
 
-logging.info("Starting Chargery BMS driver " + str(driver['version']))
+logging.info("Starting Sumry Inverter driver " + str(driver['version']))
 
 
-parser = argparse.ArgumentParser(description = 'Chargery BMS driver')
+parser = argparse.ArgumentParser(description = 'Sumry Inverter driver')
 parser.add_argument('--version', action='version', version='%(prog)s v' + str(driver['version']) + ' (' + driver['serial'] + ')')
 parser.add_argument('--debug', action="store_true", help='enable debug logging')
 parser.add_argument('--test', action="store_true", help='test some stored examples network packets')
@@ -80,7 +80,7 @@ if args.victron:
 	dbusservice.add_path('/HardwareVersion', driver['version'])
 	dbusservice.add_path('/Serial',          driver['serial'])
 	dbusservice.add_path('/Connected',       1)
-	
+
 	# Create alarms
 	dbusservice.add_path('/Alarms/InternalFailure', 0)
 
@@ -92,159 +92,75 @@ if args.victron:
 	dbusservice.add_path('/Devices/0/ServiceName',     driver['servicename'])
 	dbusservice.add_path('/Devices/0/VregLink',        "(API)")
 
-	# Create the chargery bms paths
-	dbusservice.add_path('/Info/Soc',                      -1)
-	dbusservice.add_path('/Info/CurrentMode',              -1)
-	dbusservice.add_path('/Info/Current',                  -1)
-	dbusservice.add_path('/Info/Temp/Sensor1',             -1)
-	dbusservice.add_path('/Info/Temp/Sensor2',             -1)
-	dbusservice.add_path('/Info/ChargeEndVoltage',         -1)
-	dbusservice.add_path('/Info/DischargeEndVoltage',      -1)
-	dbusservice.add_path('/Info/ChargeRelayStatus',        -1)
-	dbusservice.add_path('/Info/DischargeRelayStatus',     -1)
-	dbusservice.add_path('/Info/UpdateTimestamp',          -1)
-	dbusservice.add_path('/Voltages/Cell1',                -1)
-	dbusservice.add_path('/Voltages/Cell2',                -1)
-	dbusservice.add_path('/Voltages/Cell3',                -1)
-	dbusservice.add_path('/Voltages/Cell4',                -1)
-	dbusservice.add_path('/Voltages/Cell5',                -1)
-	dbusservice.add_path('/Voltages/Cell6',                -1)
-	dbusservice.add_path('/Voltages/Cell7',                -1)
-	dbusservice.add_path('/Voltages/Cell8',                -1)
-	dbusservice.add_path('/Voltages/Cell9',                -1)
-	dbusservice.add_path('/Voltages/Cell10',               -1)
-	dbusservice.add_path('/Voltages/Cell11',               -1)
-	dbusservice.add_path('/Voltages/Cell12',               -1)
-	dbusservice.add_path('/Voltages/Cell13',               -1)
-	dbusservice.add_path('/Voltages/Cell14',               -1)
-	dbusservice.add_path('/Voltages/Cell15',               -1)
-	dbusservice.add_path('/Voltages/Cell16',               -1)
-	dbusservice.add_path('/Voltages/Cell17',               -1)
-	dbusservice.add_path('/Voltages/Cell18',               -1)
-	dbusservice.add_path('/Voltages/Cell19',               -1)
-	dbusservice.add_path('/Voltages/Cell20',               -1)
-	dbusservice.add_path('/Voltages/Cell21',               -1)
-	dbusservice.add_path('/Voltages/Cell22',               -1)
-	dbusservice.add_path('/Voltages/Cell23',               -1)
-	dbusservice.add_path('/Voltages/Cell24',               -1)
-	dbusservice.add_path('/Voltages/Sum',                  -1)
-	dbusservice.add_path('/Voltages/Diff',                 -1)
-	dbusservice.add_path('/Voltages/Max',                  -1)
-	dbusservice.add_path('/Voltages/Min',                  -1)
-	dbusservice.add_path('/Voltages/Avg',                  -1)
-	dbusservice.add_path('/Voltages/BatteryCapacityWH',    -1)
-	dbusservice.add_path('/Voltages/BatteryCapacityAH',    -1)
-	dbusservice.add_path('/Voltages/UpdateTimestamp',      -1)
-	dbusservice.add_path('/Impedances/CurrentMode1',       -1)
-	dbusservice.add_path('/Impedances/Current1',           -1)
-	dbusservice.add_path('/Impedances/Cell1',              -1)
-	dbusservice.add_path('/Impedances/Cell2',              -1)
-	dbusservice.add_path('/Impedances/Cell3',              -1)
-	dbusservice.add_path('/Impedances/Cell4',              -1)
-	dbusservice.add_path('/Impedances/Cell5',              -1)
-	dbusservice.add_path('/Impedances/Cell6',              -1)
-	dbusservice.add_path('/Impedances/Cell7',              -1)
-	dbusservice.add_path('/Impedances/Cell8',              -1)
-	dbusservice.add_path('/Impedances/Cell9',              -1)
-	dbusservice.add_path('/Impedances/Cell10',             -1)
-	dbusservice.add_path('/Impedances/Cell11',             -1)
-	dbusservice.add_path('/Impedances/Cell12',             -1)
-	dbusservice.add_path('/Impedances/Cell13',             -1)
-	dbusservice.add_path('/Impedances/Cell14',             -1)
-	dbusservice.add_path('/Impedances/Cell15',             -1)
-	dbusservice.add_path('/Impedances/Cell16',             -1)
-	dbusservice.add_path('/Impedances/Cell17',             -1)
-	dbusservice.add_path('/Impedances/Cell18',             -1)
-	dbusservice.add_path('/Impedances/Cell19',             -1)
-	dbusservice.add_path('/Impedances/Cell20',             -1)
-	dbusservice.add_path('/Impedances/Cell21',             -1)
-	dbusservice.add_path('/Impedances/Cell22',             -1)
-	dbusservice.add_path('/Impedances/Cell23',             -1)
-	dbusservice.add_path('/Impedances/Cell24',             -1)
-	dbusservice.add_path('/Impedances/Sum',                -1)
-	dbusservice.add_path('/Impedances/Diff',               -1)
-	dbusservice.add_path('/Impedances/Max',                -1)
-	dbusservice.add_path('/Impedances/Min',                -1)
-	dbusservice.add_path('/Impedances/Avg',                -1)
-	dbusservice.add_path('/Impedances/UpdateTimestamp',    -1)
-
+	# Create the Sumry Inverter paths
+	# AC Input measurements
+	dbusservice.add_path('/Ac/In/1/L1/V',                     -1)
+	dbusservice.add_path('/Ac/In/1/L1/F',                     -1)
+	dbusservice.add_path('/Ac/In/1/L1/I',                     -1)
+	dbusservice.add_path('/Ac/In/1/L1/P',                     -1)
+	# AC Input settings
+	dbusservice.add_path('/Ac/In/1/CurrentLimit',             -1)
+	dbusservice.add_path('/Ac/In/1/CurrentLimit GetMin',      -1)
+	dbusservice.add_path('/Ac/In/1/CurrentLimit GetMax',      -1)
+	dbusservice.add_path('/Ac/In/1/CurrentLimitIsAdjustable',  0)      # since this is no victron device
+	dbusservice.add_path('/Ac/In/1/Type',                     -1)      # AC IN1 type: 0 (Not used), 1 (Grid), 2(Generator), 3(Shore)
+	# AC Output measurements
+	dbusservice.add_path('/Ac/Out/L1/V',                      -1)
+	dbusservice.add_path('/Ac/Out/L1/F',                      -1)
+	dbusservice.add_path('/Ac/Out/L1/I',                      -1)
+	dbusservice.add_path('/Ac/Out/L1/P',                      -1)
+	# ActiveIn paths
+	dbusservice.add_path('/Ac/ActiveIn/ActiveInput',          -1)      # Active input: 0 = ACin-1, 1 = ACin-2,
+	# Other AC paths:
+	dbusservice.add_path('/Ac/NumberOfPhases',                 1)
+	dbusservice.add_path('/Ac/NumberOfAcInputs',               1)
+	# Generic alarms: (For all alarms: 0=OK; 1=Warning; 2=Alarm)
+	dbusservice.add_path('/Alarms/LowSoc',                     -1)      # Low state of charge
+ 	dbusservice.add_path('/Alarms/LowVoltage',                 -1)      # Low battery voltage
+	dbusservice.add_path('/Alarms/HighVoltage',                -1)      # High battery voltage
+	dbusservice.add_path('/Alarms/LowVoltageAcOut',            -1)      # Low AC Out voltage
+	dbusservice.add_path('/Alarms/HighVoltageAcOut',           -1)      # High AC Out voltage
+	dbusservice.add_path('/Alarms/HighTemperature',            -1)      # High device temperature
+	dbusservice.add_path('/Alarms/Overload',                   -1)      # Inverter overload
+	dbusservice.add_path('/Alarms/Ripple',                     -1)      # High DC ripple
+	# DC Input measurements
+	dbusservice.add_path('/Dc/0/Voltage',                     -1)	
+	dbusservice.add_path('/Dc/0/Current',                     -1)
+	dbusservice.add_path('/Dc/0/Temperature',                 -1)
+	# Operating mode / state
+	dbusservice.add_path('/Mode',                             -1)      # Position of the switch  1=Charger Only;2=Inverter Only;3=On;4=Off
+	dbusservice.add_path('/State',                            -1)      # Charger state: 0=Off, 2=Fault, 3=Bulk, 4=Absorption, 5=Float, 6=Storage, 7=Equalize, 8=Passthrough, 9=Inverting, 245=Wake-up, 25-=Blocked, 252=External control
 
 	# Create the real values paths
-	dbusservice.add_path('/Raw/Info/Soc',                      -1)
-	dbusservice.add_path('/Raw/Info/CurrentMode',              -1)
-	dbusservice.add_path('/Raw/Info/Current',                  -1)
-	dbusservice.add_path('/Raw/Info/Temp/Sensor1',             -1)
-	dbusservice.add_path('/Raw/Info/Temp/Sensor2',             -1)
-	dbusservice.add_path('/Raw/Info/ChargeEndVoltage',         -1)
-	dbusservice.add_path('/Raw/Info/DischargeEndVoltage',      -1)
-	dbusservice.add_path('/Raw/Info/ChargeRelayStatus',        -1)
-	dbusservice.add_path('/Raw/Info/DischargeRelayStatus',     -1)
-	dbusservice.add_path('/Raw/Info/UpdateTimestamp',          -1)
-	dbusservice.add_path('/Raw/Voltages/Cell1',                -1)
-	dbusservice.add_path('/Raw/Voltages/Cell2',                -1)
-	dbusservice.add_path('/Raw/Voltages/Cell3',                -1)
-	dbusservice.add_path('/Raw/Voltages/Cell4',                -1)
-	dbusservice.add_path('/Raw/Voltages/Cell5',                -1)
-	dbusservice.add_path('/Raw/Voltages/Cell6',                -1)
-	dbusservice.add_path('/Raw/Voltages/Cell7',                -1)
-	dbusservice.add_path('/Raw/Voltages/Cell8',                -1)
-	dbusservice.add_path('/Raw/Voltages/Cell9',                -1)
-	dbusservice.add_path('/Raw/Voltages/Cell10',               -1)
-	dbusservice.add_path('/Raw/Voltages/Cell11',               -1)
-	dbusservice.add_path('/Raw/Voltages/Cell12',               -1)
-	dbusservice.add_path('/Raw/Voltages/Cell13',               -1)
-	dbusservice.add_path('/Raw/Voltages/Cell14',               -1)
-	dbusservice.add_path('/Raw/Voltages/Cell15',               -1)
-	dbusservice.add_path('/Raw/Voltages/Cell16',               -1)
-	dbusservice.add_path('/Raw/Voltages/Cell17',               -1)
-	dbusservice.add_path('/Raw/Voltages/Cell18',               -1)
-	dbusservice.add_path('/Raw/Voltages/Cell19',               -1)
-	dbusservice.add_path('/Raw/Voltages/Cell20',               -1)
-	dbusservice.add_path('/Raw/Voltages/Cell21',               -1)
-	dbusservice.add_path('/Raw/Voltages/Cell22',               -1)
-	dbusservice.add_path('/Raw/Voltages/Cell23',               -1)
-	dbusservice.add_path('/Raw/Voltages/Cell24',               -1)
-	dbusservice.add_path('/Raw/Voltages/Sum',                  -1)
-	dbusservice.add_path('/Raw/Voltages/Diff',                 -1)
-	dbusservice.add_path('/Raw/Voltages/Max',                  -1)
-	dbusservice.add_path('/Raw/Voltages/Min',                  -1)
-	dbusservice.add_path('/Raw/Voltages/Avg',                  -1)
-	dbusservice.add_path('/Raw/Voltages/BatteryCapacityWH',    -1)
-	dbusservice.add_path('/Raw/Voltages/BatteryCapacityAH',    -1)
-	dbusservice.add_path('/Raw/Voltages/UpdateTimestamp',      -1)
-	dbusservice.add_path('/Raw/Impedances/CurrentMode1',       -1)
-	dbusservice.add_path('/Raw/Impedances/Current1',           -1)
-	dbusservice.add_path('/Raw/Impedances/Cell1',              -1)
-	dbusservice.add_path('/Raw/Impedances/Cell2',              -1)
-	dbusservice.add_path('/Raw/Impedances/Cell3',              -1)
-	dbusservice.add_path('/Raw/Impedances/Cell4',              -1)
-	dbusservice.add_path('/Raw/Impedances/Cell5',              -1)
-	dbusservice.add_path('/Raw/Impedances/Cell6',              -1)
-	dbusservice.add_path('/Raw/Impedances/Cell7',              -1)
-	dbusservice.add_path('/Raw/Impedances/Cell8',              -1)
-	dbusservice.add_path('/Raw/Impedances/Cell9',              -1)
-	dbusservice.add_path('/Raw/Impedances/Cell10',             -1)
-	dbusservice.add_path('/Raw/Impedances/Cell11',             -1)
-	dbusservice.add_path('/Raw/Impedances/Cell12',             -1)
-	dbusservice.add_path('/Raw/Impedances/Cell13',             -1)
-	dbusservice.add_path('/Raw/Impedances/Cell14',             -1)
-	dbusservice.add_path('/Raw/Impedances/Cell15',             -1)
-	dbusservice.add_path('/Raw/Impedances/Cell16',             -1)
-	dbusservice.add_path('/Raw/Impedances/Cell17',             -1)
-	dbusservice.add_path('/Raw/Impedances/Cell18',             -1)
-	dbusservice.add_path('/Raw/Impedances/Cell19',             -1)
-	dbusservice.add_path('/Raw/Impedances/Cell20',             -1)
-	dbusservice.add_path('/Raw/Impedances/Cell21',             -1)
-	dbusservice.add_path('/Raw/Impedances/Cell22',             -1)
-	dbusservice.add_path('/Raw/Impedances/Cell23',             -1)
-	dbusservice.add_path('/Raw/Impedances/Cell24',             -1)
-	dbusservice.add_path('/Raw/Impedances/Sum',                -1)
-	dbusservice.add_path('/Raw/Impedances/Diff',               -1)
-	dbusservice.add_path('/Raw/Impedances/Max',                -1)
-	dbusservice.add_path('/Raw/Impedances/Min',                -1)
-	dbusservice.add_path('/Raw/Impedances/Avg',                -1)
-	dbusservice.add_path('/Raw/Impedances/UpdateTimestamp',    -1)
-
+	dbusservice.add_path('/Raw/Ac/In/1/L1/V',                     -1)
+	dbusservice.add_path('/Raw/Ac/In/1/L1/F',                     -1)
+	dbusservice.add_path('/Raw/Ac/In/1/L1/I',                     -1)
+	dbusservice.add_path('/Raw/Ac/In/1/L1/P',                     -1)
+	dbusservice.add_path('/Raw/Ac/In/1/CurrentLimit',             -1)
+	dbusservice.add_path('/Raw/Ac/In/1/CurrentLimit GetMin',      -1)
+	dbusservice.add_path('/Raw/Ac/In/1/CurrentLimit GetMax',      -1)
+	dbusservice.add_path('/Raw/Ac/In/1/CurrentLimitIsAdjustable',  0)      # since this is no victron device
+	dbusservice.add_path('/Raw/Ac/In/1/Type',                     -1)      # AC IN1 type: 0 (Not used), 1 (Grid), 2(Generator), 3(Shore)
+	dbusservice.add_path('/Raw/Ac/Out/L1/V',                      -1)
+	dbusservice.add_path('/Raw/Ac/Out/L1/F',                      -1)
+	dbusservice.add_path('/Raw/Ac/Out/L1/I',                      -1)
+	dbusservice.add_path('/Raw/Ac/Out/L1/P',                      -1)
+	dbusservice.add_path('/Raw/Ac/ActiveIn/ActiveInput',          -1)      # Active input: 0 = ACin-1, 1 = ACin-2,
+	dbusservice.add_path('/Raw/Ac/NumberOfPhases',                 1)
+	dbusservice.add_path('/Raw/Ac/NumberOfAcInputs',               1)
+	dbusservice.add_path('/Raw/Alarms/LowSoc',                     -1)      # Low state of charge
+ 	dbusservice.add_path('/Raw/Alarms/LowVoltage',                 -1)      # Low battery voltage
+	dbusservice.add_path('/Raw/Alarms/HighVoltage',                -1)      # High battery voltage
+	dbusservice.add_path('/Raw/Alarms/LowVoltageAcOut',            -1)      # Low AC Out voltage
+	dbusservice.add_path('/Raw/Alarms/HighVoltageAcOut',           -1)      # High AC Out voltage
+	dbusservice.add_path('/Raw/Alarms/HighTemperature',            -1)      # High device temperature
+	dbusservice.add_path('/Raw/Alarms/Overload',                   -1)      # Inverter overload
+	dbusservice.add_path('/Raw/Alarms/Ripple',                     -1)      # High DC ripple
+	dbusservice.add_path('/Raw/Dc/0/Voltage',                     -1)	
+	dbusservice.add_path('/Raw/Dc/0/Current',                     -1)
+	dbusservice.add_path('/Raw/Dc/0/Temperature',                 -1)
+	dbusservice.add_path('/Raw/Mode',                             -1)      # Position of the switch  1=Charger Only;2=Inverter Only;3=On;4=Off
+	dbusservice.add_path('/Raw/State',                            -1)      # Charger state: 0=Off, 2=Fault, 3=Bulk, 4=Absorption, 5=Float, 6=Storage, 7=Equalize, 8=Passthrough, 9=Inverting, 245=Wake-up, 25-=Blocked, 252=External control
 
 try:
 
@@ -291,13 +207,13 @@ if args.victron:
 
 
 PACKET_HEADER             = 0x24
-PACKET_STATUS_CELLS       = 0x56
-PACKET_STATUS_BMS         = 0x57
-PACKET_STATUS_IMPEDANCES  = 0x58
+#PACKET_STATUS_CELLS       = 0x56
+PACKET_STATUS_INV         = 0x57
+#PACKET_STATUS_IMPEDANCES  = 0x58
 
-PACKET_LENGTH_MINIMUM            = 10
-PACKET_LENGTH_STATUS_CELLS       = [29, 45, 61]
-PACKET_LENGTH_STATUS_BMS         = [19]
+PACKET_LENGTH             = 10
+#PACKET_LENGTH_STATUS_CELLS       = [29, 45, 61]
+PACKET_LENGTH_STATUS_INV         = [19]
 
 # Special handling here: the impedances packet length is dynamically
 # and depends on how many cells are monitored. The minimum length of
@@ -305,330 +221,145 @@ PACKET_LENGTH_STATUS_BMS         = [19]
 # and checksum is 8 bytes. On 6 monitored cells the packet length will
 # be 8+(2*6) = 20 bytes. Therefore, the smallest possible and valid
 # impedances network packet will be 10 bytes
-PACKET_LENGTH_STATUS_IMPEDANCES  = 10
+#PACKET_LENGTH_STATUS_IMPEDANCES  = 10
 
 
-MIN_CELL_VOLTAGE   = 1.0
-MIN_CELL_IMPEDANCE = 0.0
+#MIN_CELL_VOLTAGE   = 1.0
+#MIN_CELL_IMPEDANCE = 0.0
 
 # Again special handling: Negative temperatures will result in
 # a buffer overflow we do handle this if temperature values
 # are retruned above 65000 which is about - 53,6 degree celsius
-MINUS_TEMPERATURE_OFFSET = 65000
+#MINUS_TEMPERATURE_OFFSET = 65000
 
-BMS_STATUS = {
-	'bms' : { 
-		'charged_end_voltage' : {
+INVERTER_STATUS = {
+	'AC_input' : { 
+		'voltage_of_AC_In1' : {
 			'value' : -1.000,
 			'text' : ""
 		},
-		'discharged_end_voltage' : {
+		'frequency_of_AC_In1' : {
 			'value' : -1.000,
 			'text' : ""
 		},
-		'charge_relay_status' : {
+		'current_of_AC_In1' : {
 			'value' : -1.000,
 			'text' : ""
 		},
-		'discharge_relay_status' : {
+		'real_power_of_AC_In1' : {
 			'value' : -1.000,
 			'text' : ""
 		},
-		'current_mode'        : {
+		'input_current_limit_of_AC_In1' : {
+			'value' : -1.000,
+			'text'  : ""
+		},
+		'minimum_allowed_current_limit' : {
+			'value' : -1.000,
+			'text' : ""
+		},
+		'maximum_allowed_current_limit' : {
+			'value' : -1.000,
+			'text'  : ""
+		},
+		'current_limit_is_adjustable' : {
 			'value' : -1,
 			'text'  : ""
 		},
-		'current' : {
-			'value' : -1,
-			'text' : ""
-		},
-		'temperature' : {
-			'sensor_t1' : {
-				'value' : -1.00,
-				'text'  : ""
-			},
-			'sensor_t2' : {
-				'value' : -1.00,
-				'text'  : ""
-			}
-		},
-		'soc' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'timestamp' : {
+		'AC_in_type' : {
 			'value' : -1,
 			'text'  : ""
 		}
 	},
-	'voltages' : {
-		'cell1_voltage' : {
+	'AC_output' : { 
+		'voltage_of_AC_out' : {
+			'value' : -1.000,
+			'text' : ""
+		},
+		'frequency_of_AC_out' : {
+			'value' : -1.000,
+			'text' : ""
+		},
+		'current_of_AC_out' : {
+			'value' : -1.000,
+			'text' : ""
+		},
+		'real_power_of_AC_out' : {
+			'value' : -1.000,
+			'text' : ""
+		}
+	},
+	'other_AC' : {
+		'active_input' : {
 			'value' : -1,
 			'text'  : ""
 		},
-		'cell2_voltage' : {
+		'number_of_phases' : {
 			'value' : -1,
 			'text'  : ""
 		},
-		'cell3_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell4_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell5_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell6_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell7_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell8_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell9_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell10_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell11_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell12_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell13_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell14_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell15_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell16_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell17_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell18_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell19_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell20_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell21_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell22_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell23_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell24_voltage' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'agg_voltages' : {
-			'sum' : {
-				'value' : -1,
-				'text'  : ""
-			},
-			'max' : {
-				'value' : -1,
-				'text'  : ""
-			},
-			'min' : {
-				'value' : -1,
-				'text'  : ""
-			},
-			'diff' : {
-				'value' : -1,
-				'text'  : ""
-			},
-			'average' : {
-				'value' : -1,
-				'text'  : ""
-			}
-		},
-		'battery_capacity_wh' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'battery_capacity_ah' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'timestamp' : {
+		'number_of_AC_inputs' : {
 			'value' : -1,
 			'text'  : ""
 		}
+		
 	},
-	'impedances' : {
-		'current_mode1'    : {
+	'alarms' : {
+		'low_SOC' : {
 			'value' : -1,
 			'text'  : ""
 		},
-		'current1'        : {
-			'value' : -1,
-			'text' : ""
-		},
-		'cell1_impedance' : {
+		'low_battery_voltage' : {
 			'value' : -1,
 			'text'  : ""
 		},
-		'cell2_impedance' : {
+		'high_battery_voltage' : {
 			'value' : -1,
 			'text'  : ""
 		},
-		'cell3_impedance' : {
+		'low_AC_out_voltage' : {
 			'value' : -1,
 			'text'  : ""
 		},
-		'cell4_impedance' : {
+		'high_AC_out_voltage' : {
 			'value' : -1,
 			'text'  : ""
 		},
-		'cell5_impedance' : {
+		'high_device_temperature' : {
 			'value' : -1,
 			'text'  : ""
 		},
-		'cell6_impedance' : {
+		'inverter_overload' : {
 			'value' : -1,
 			'text'  : ""
 		},
-		'cell7_impedance' : {
+		'high_DC_ripple' : {
+			'value' : -1,
+			'text'  : ""
+		}
+		
+	},
+	'DC_input' : {
+		'battery_voltage' : {
 			'value' : -1,
 			'text'  : ""
 		},
-		'cell8_impedance' : {
+		'battery_current' : {
 			'value' : -1,
 			'text'  : ""
 		},
-		'cell9_impedance' : {
+		'battery_temperature' : {
+			'value' : -1,
+			'text'  : ""
+		}
+		
+	},
+	'inverter_mode' : {
+		'switch_position' : {
 			'value' : -1,
 			'text'  : ""
 		},
-		'cell10_impedance' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell11_impedance' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell12_impedance' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell13_impedance' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell14_impedance' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell15_impedance' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell16_impedance' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell17_impedance' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell18_impedance' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell19_impedance' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell20_impedance' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell21_impedance' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell22_impedance' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell23_impedance' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'cell24_impedance' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'agg_impedances' : {
-			'sum' : {
-				'value' : -1,
-				'text'  : ""
-			},
-			'max' : {
-				'value' : -1,
-				'text'  : ""
-			},
-			'min' : {
-				'value' : -1,
-				'text'  : ""
-			},
-			'diff' : {
-				'value' : -1,
-				'text'  : ""
-			},
-			'average' : {
-				'value' : -1,
-				'text'  : ""
-			}
-		},
-		'battery_capacity_wh' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'battery_capacity_ah' : {
-			'value' : -1,
-			'text'  : ""
-		},
-		'timestamp' : {
+		'charger_state' : {
 			'value' : -1,
 			'text'  : ""
 		}
@@ -636,168 +367,81 @@ BMS_STATUS = {
 }
 
 
-def reset_status_values():
+def reset_ACinput_values():
 
-	BMS_STATUS['bms']['charged_end_voltage']['value'] = -1
-	BMS_STATUS['bms']['charged_end_voltage']['text']  = ""
-	BMS_STATUS['bms']['discharged_end_voltage']['value'] = -1
-	BMS_STATUS['bms']['discharged_end_voltage']['text']  = ""
-	BMS_STATUS['bms']['charge_relay_status']['value'] = -1
-	BMS_STATUS['bms']['charge_relay_status']['text']  = ""
-	BMS_STATUS['bms']['discharge_relay_status']['value'] = -1
-	BMS_STATUS['bms']['discharge_relay_status']['text']  = ""
-	BMS_STATUS['bms']['current_mode']['value'] = -1
-	BMS_STATUS['bms']['current_mode']['text']  = ""
-	BMS_STATUS['bms']['current']['value'] = -1
-	BMS_STATUS['bms']['current']['text']  = ""
-	BMS_STATUS['bms']['temperature']['sensor_t1']['value'] = -1
-	BMS_STATUS['bms']['temperature']['sensor_t1']['text']  = ""
-	BMS_STATUS['bms']['temperature']['sensor_t2']['value'] = -1
-	BMS_STATUS['bms']['temperature']['sensor_t2']['text']  = ""
-	BMS_STATUS['bms']['soc']['value'] = -1
-	BMS_STATUS['bms']['soc']['text']  = ""
-	BMS_STATUS['bms']['timestamp']['value'] = -1
-	BMS_STATUS['bms']['timestamp']['text']  = ""
+	INVERTER_STATUS['AC_input']['voltage_of_AC_In1']['value'] = -1
+	INVERTER_STATUS['AC_input']['voltage_of_AC_In1']['text']  = ""
+	INVERTER_STATUS['AC_input']['frequency_of_AC_In1']['value'] = -1
+	INVERTER_STATUS['AC_input']['frequency_of_AC_In1']['text']  = ""
+	INVERTER_STATUS['AC_input']['current_of_AC_In1']['value'] = -1
+	INVERTER_STATUS['AC_input']['current_of_AC_In1']['text']  = ""
+	INVERTER_STATUS['AC_input']['real_power_of_AC_In1']['value'] = -1
+	INVERTER_STATUS['AC_input']['real_power_of_AC_In1']['text']  = ""
+	INVERTER_STATUS['AC_input']['input_current_limit_of_AC_In1']['value'] = -1
+	INVERTER_STATUS['AC_input']['input_current_limit_of_AC_In1']['text']  = ""
+	INVERTER_STATUS['AC_input']['minimum_allowed_current_limit']['value'] = -1
+	INVERTER_STATUS['AC_input']['minimum_allowed_current_limit']['text']  = ""
+	INVERTER_STATUS['AC_input']['maximum_allowed_current_limit']['value'] = -1
+	INVERTER_STATUS['AC_input']['maximum_allowed_current_limit']['text']  = ""
+	INVERTER_STATUS['AC_input']['current_limit_is_adjustable']['value'] = -1
+	INVERTER_STATUS['AC_input']['current_limit_is_adjustable']['text']  = ""
+	INVERTER_STATUS['AC_input']['AC_in_type']['value'] = -1
+	INVERTER_STATUS['AC_input']['AC_in_type']['text']  = ""
 
+def reset_ACoutput_values():
 
-def reset_impedances_values():
+	INVERTER_STATUS['AC_output']['voltage_of_AC_out']['value'] = -1
+	INVERTER_STATUS['AC_output']['voltage_of_AC_out']['text']  = ""
+	INVERTER_STATUS['AC_output']['frequency_of_AC_out']['value'] = -1
+	INVERTER_STATUS['AC_output']['frequency_of_AC_out']['text']  = ""
+	INVERTER_STATUS['AC_output']['current_of_AC_out']['value'] = -1
+	INVERTER_STATUS['AC_output']['current_of_AC_out']['text']  = ""
+	INVERTER_STATUS['AC_output']['real_power_of_AC_out']['value'] = -1
+	INVERTER_STATUS['AC_output']['real_power_of_AC_out']['text']  = ""
 
-	BMS_STATUS['impedances']['current_mode1']['value'] = -1
-	BMS_STATUS['impedances']['current_mode1']['text']  = ""
-	BMS_STATUS['impedances']['current1']['value'] = -1
-	BMS_STATUS['impedances']['current1']['text']  = ""
-	BMS_STATUS['impedances']['cell1_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell1_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell2_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell2_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell3_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell3_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell4_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell4_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell5_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell5_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell6_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell6_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell7_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell7_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell8_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell8_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell9_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell9_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell10_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell10_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell11_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell11_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell12_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell12_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell13_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell13_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell14_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell14_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell15_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell15_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell16_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell16_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell17_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell17_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell18_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell18_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell19_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell19_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell20_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell20_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell21_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell21_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell22_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell22_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell23_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell23_impedance']['text']  = ""
-	BMS_STATUS['impedances']['cell24_impedance']['value'] = -1
-	BMS_STATUS['impedances']['cell24_impedance']['text']  = ""
-	BMS_STATUS['impedances']['agg_impedances']['sum']['value']     = -1
-	BMS_STATUS['impedances']['agg_impedances']['sum']['text']      = ""
-	BMS_STATUS['impedances']['agg_impedances']['max']['value']     = -1
-	BMS_STATUS['impedances']['agg_impedances']['max']['text']      = ""
-	BMS_STATUS['impedances']['agg_impedances']['min']['value']     = -1
-	BMS_STATUS['impedances']['agg_impedances']['min']['text']      = ""
-	BMS_STATUS['impedances']['agg_impedances']['diff']['value']    = -1
-	BMS_STATUS['impedances']['agg_impedances']['diff']['text']     = ""
-	BMS_STATUS['impedances']['agg_impedances']['average']['value'] = -1
-	BMS_STATUS['impedances']['agg_impedances']['average']['text']  = ""
-	BMS_STATUS['impedances']['battery_capacity_wh']['value'] = -1
-	BMS_STATUS['impedances']['battery_capacity_wh']['text']  = ""
-	BMS_STATUS['impedances']['battery_capacity_ah']['value'] = -1
-	BMS_STATUS['impedances']['battery_capacity_ah']['text']  = ""
-	BMS_STATUS['impedances']['timestamp']['value'] = -1
-	BMS_STATUS['impedances']['timestamp']['text']  = ""
+def reset_otherAC_values():
 
+	INVERTER_STATUS['other_AC']['active_input']['value'] = -1
+	INVERTER_STATUS['other_AC']['active_input']['text']  = ""
+	INVERTER_STATUS['other_AC']['number_of_phases']['value'] = -1
+	INVERTER_STATUS['other_AC']['number_of_phases']['text']  = ""
+	INVERTER_STATUS['other_AC']['number_of_AC_inputs']['value'] = -1
+	INVERTER_STATUS['other_AC']['number_of_AC_inputs']['text']  = ""
 
-def reset_voltages_values():
-	BMS_STATUS['voltages']['cell1_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell1_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell2_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell2_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell3_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell3_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell4_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell4_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell5_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell5_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell6_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell6_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell7_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell7_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell8_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell8_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell9_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell9_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell10_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell10_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell11_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell11_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell12_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell12_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell13_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell13_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell14_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell14_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell15_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell15_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell16_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell16_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell17_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell17_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell18_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell18_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell19_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell19_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell20_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell20_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell21_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell21_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell22_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell22_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell23_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell23_voltage']['text']  = ""
-	BMS_STATUS['voltages']['cell24_voltage']['value'] = -1
-	BMS_STATUS['voltages']['cell24_voltage']['text']  = ""
-	BMS_STATUS['voltages']['agg_voltages']['sum']['value']     = -1
-	BMS_STATUS['voltages']['agg_voltages']['sum']['text']      = ""
-	BMS_STATUS['voltages']['agg_voltages']['max']['value']     = -1
-	BMS_STATUS['voltages']['agg_voltages']['max']['text']      = ""
-	BMS_STATUS['voltages']['agg_voltages']['min']['value']     = -1
-	BMS_STATUS['voltages']['agg_voltages']['min']['text']      = ""
-	BMS_STATUS['voltages']['agg_voltages']['diff']['value']    = -1
-	BMS_STATUS['voltages']['agg_voltages']['diff']['text']     = ""
-	BMS_STATUS['voltages']['agg_voltages']['average']['value'] = -1
-	BMS_STATUS['voltages']['agg_voltages']['average']['text']  = ""
-	BMS_STATUS['voltages']['battery_capacity_wh']['value'] = -1
-	BMS_STATUS['voltages']['battery_capacity_wh']['text']  = ""
-	BMS_STATUS['voltages']['battery_capacity_ah']['value'] = -1
-	BMS_STATUS['voltages']['battery_capacity_ah']['text']  = ""
-	BMS_STATUS['voltages']['timestamp']['value'] = -1
-	BMS_STATUS['voltages']['timestamp']['text']  = ""
+def reset_alarms_values():
+	
+	INVERTER_STATUS['alarms']['low_SOC']['value'] = -1
+	INVERTER_STATUS['alarms']['low_SOC']['text']  = ""
+	INVERTER_STATUS['alarms']['low_battery_voltage']['value'] = -1
+	INVERTER_STATUS['alarms']['low_battery_voltage']['text']  = ""
+	INVERTER_STATUS['alarms']['high_battery_voltage']['value'] = -1
+	INVERTER_STATUS['alarms']['high_battery_voltage']['text']  = ""
+	INVERTER_STATUS['alarms']['low_AC_out_voltage']['value'] = -1
+	INVERTER_STATUS['alarms']['low_AC_out_voltage']['text']  = ""
+	INVERTER_STATUS['alarms']['high_AC_out_voltage']['value'] = -1
+	INVERTER_STATUS['alarms']['high_AC_out_voltage']['text']  = ""
+	INVERTER_STATUS['alarms']['high_device_temperature']['value'] = -1
+	INVERTER_STATUS['alarms']['high_device_temperature']['text']  = ""
+	INVERTER_STATUS['alarms']['inverter_overload]['value'] = -1
+	INVERTER_STATUS['alarms']['inverter_overload']['text']  = ""
+	INVERTER_STATUS['alarms']['high_DC_ripple']['value'] = -1
+	INVERTER_STATUS['alarms']['high_DC_ripple']['text']  = ""
 
+def reset_ACinput_values():
+	
+	INVERTER_STATUS['DC_input']['battery_voltage']['value'] = -1
+	INVERTER_STATUS['DC_input']['battery_voltage']['text']  = ""
+	INVERTER_STATUS['DC_input']['battery_current']['value'] = -1
+	INVERTER_STATUS['DC_input']['battery_current']['text']  = ""
+	INVERTER_STATUS['DC_input']['battery_temperature']['value'] = -1
+	INVERTER_STATUS['DC_input']['battery_temperature']['text']  = ""
+
+def reset_mode_values():
+
+	INVERTER_STATUS['inverter_mode']['switch_position']['value'] = -1
+	INVERTER_STATUS['inverter_mode']['switch_position']['text']  = ""
+	INVERTER_STATUS['inverter_mode']['charger_state']['value'] = -1
+	INVERTER_STATUS['inverter_mode']['charger_state']['text']  = ""
 
 def debug_packet(packet):
 
@@ -825,27 +469,31 @@ def get_header_position(packet):
 def get_voltage_value(byte1, byte2):
 	return float((float(byte1 * 256) + float(byte2)) / 1000)
 
+def get_frequency_value(byte1, byte2):
+	return float((float(byte1) + float(byte2 * 256)) / 100)
 
 def get_current_value(byte1, byte2):
-	return float((float(byte1 * 256) + float(byte2)) / 10)
+	return float((float(byte1 * 256) + float(byte2)) / 100)
 
 
 def get_current1_value(byte1, byte2):
-	return float((float(byte1) + float(byte2 * 256)) / 10)
+	return float((float(byte1) + float(byte2 * 256)) / 100)
 
+def get_power_value(byte1, byte2):
+	return float((float(byte1) + float(byte2 * 256)) / 100)
 
 def get_temperature_value(byte1, byte2):
-	if (((byte1 * 256) + byte2) >= MINUS_TEMPERATURE_OFFSET): # temperature below 0 degree celsius
+	if (((byte1 * 256) + byte2) >= 0): # temperature below 0 degree celsius
 		return (-1) * float(((256 * 256) - (float(byte1 * 256) + float(byte2))) / 10)
 	else:
 		return float((float(byte1 * 256) + float(byte2)) / 10)
 	
-def get_battery_capacity(byte1, byte2, byte3, byte4):
-	return float((float(byte1) + float(byte2 * 256) + float(byte3 * 256 * 256) + float(byte4 * 256 * 256 * 256)) / 1000)
+#def get_battery_capacity(byte1, byte2, byte3, byte4):
+#	return float((float(byte1) + float(byte2 * 256) + float(byte3 * 256 * 256) + float(byte4 * 256 * 256 * 256)) / 1000)
 
 
-def get_cell_impedance(byte1, byte2):
-	return float((float(byte1) + float(byte2 * 256)) / 10)
+#def get_cell_impedance(byte1, byte2):
+#	return float((float(byte1) + float(byte2 * 256)) / 10)
 
 
 
@@ -853,7 +501,7 @@ def parse_packet(packet):
 	logging.debug("Parse Packet [" + str(len(packet)) + "] bytes")
 	debug_packet(packet)
 
-	while (len(packet) >= PACKET_LENGTH_MINIMUM): 
+	while (len(packet) >= PACKET_LENGTH): 
 		header_position = get_header_position(packet)
 
 		# now parse the packet	
@@ -870,9 +518,9 @@ def parse_packet(packet):
 					logging.debug("Packet Length [" + str (packet_length) + " bytes]")
 					debug_packet(packet)
 		
-					if (packet[2] == PACKET_STATUS_BMS):
+					if (packet[2] == PACKET_STATUS_INV):
 					
-						if (len(packet) < PACKET_LENGTH_STATUS_BMS[0]):
+						if (len(packet) < PACKET_LENGTH_STATUS_INV[0]):
 							logging.debug("Packet Status BMS too short, skip")
 							packet = ""
 						else:
