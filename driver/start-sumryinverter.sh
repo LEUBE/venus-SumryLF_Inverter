@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Start script for Chargery BMS
+# Start script for Sumry Inverter
 #	First parameter: tty device to use
 #
 # Keep this script running with daemon tools. If it exits because the
@@ -9,6 +9,6 @@
 
 . /opt/victronenergy/serial-starter/run-service.sh
 
-ln -s /dev/$tty /dev/ttyCHGBMS01
-app="/usr/bin/python /opt/victronenergy/chargerybms/chargerybms.py"
+ln -s /dev/$tty /dev/ttyUSB01
+app="/usr/bin/python /opt/victronenergy/sumryinverter/sumryinverter.py"
 start -d /dev/$tty --victron
