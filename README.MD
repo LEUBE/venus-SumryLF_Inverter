@@ -4,7 +4,7 @@
 
  # Description
 
-The serial driver receives data from the Chargery BMS and can be used with Venus OS. The serial driver is coded in Python
+The serial driver receives data from the Sumry Power Inverter RP Series 4-6kW and can be used with Venus OS. The serial driver is coded in Python
 and grabs the data form the RS232 USB interface every second. Example Images:
 
 ![Overview](https://raw.githubusercontent.com/Tobi177/venus-chargerybms/master/examples/overview.png)
@@ -14,7 +14,7 @@ and grabs the data form the RS232 USB interface every second. Example Images:
 
 # Requirements
 
- - Chargery BMS
+ - Sumry RP Series Inverter
  - FTDI Adapter FT232RL USB TTL Serial (IMPORTANT: Must be flashed with FT_PROG software to invert tx mode)
  - Optional: Support for Victron Venus OS. Support is enabled with the "--victron" command line parameter
 
@@ -31,10 +31,10 @@ and grabs the data form the RS232 USB interface every second. Example Images:
 
 # Command Line Parameters
 ```
-usage: chargerybms.py [-h] [--version] [--debug] [--test] [--victron] -d
+usage: sumry_inverter.py [-h] [--version] [--debug] [--test] [--victron] -d
                       DEVICE
 
-Chargery BMS driver
+Sumry Inverter driver
 
 optional arguments:
   -h, --help            show this help message and exit
