@@ -1315,7 +1315,7 @@ def handle_serial_data():
 		if (serial_port.in_waiting > 0):
 			logging.debug("Data Waiting [" + str(serial_port.in_waiting) + " bytes]")
 
-		if (serial_port.in_waiting >= (PACKET_LENGTH_MINIMUM * 2)):
+		if (serial_port.in_waiting >= (PACKET_LENGTH * 2)):
 			data_buffer_array = serial_port.read(serial_port.in_waiting)
 			logging.debug("Data Received [" + str(len(data_buffer_array)) + " bytes]")
 			for data_buffer in data_buffer_array:
