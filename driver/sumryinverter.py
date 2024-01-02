@@ -21,7 +21,7 @@ time.tzset()
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',
-    level=logging.INFO,
+    level=logging.DEBUG #INFO,
     datefmt='%Y-%m-%d %H:%M:%S')
     # filename='log.txt')
 
@@ -214,7 +214,7 @@ PACKET_HEADER             = 0x24
 PACKET_STATUS_INV         = 0x57
 #PACKET_STATUS_IMPEDANCES  = 0x58
 
-PACKET_LENGTH             = 10
+PACKET_LENGTH             = 1 #0
 #PACKET_LENGTH_STATUS_CELLS       = [29, 45, 61]
 PACKET_LENGTH_STATUS_INV         = [19]
 
