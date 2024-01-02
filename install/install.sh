@@ -2,7 +2,7 @@
 
 read -p "Install Sumry Inverter on Venus OS at your own risk? [Y to proceed]" -n 1 -r
 echo    # (optional) move to a new line
-if [[ $REPLY =~ ^[Yy]$ ]]
+if [ $REPLY =~ ^[Yy]$ ]
 then
 	echo "Download driver and library"
 
