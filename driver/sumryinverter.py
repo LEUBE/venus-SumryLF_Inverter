@@ -100,8 +100,8 @@ if args.victron:
 	dbusservice.add_path('/Ac/In/1/L1/P',                     -1)
 	# AC Input settings
 	dbusservice.add_path('/Ac/In/1/CurrentLimit',             -1)
-	dbusservice.add_path('/Ac/In/1/CurrentLimit GetMin',      -1)
-	dbusservice.add_path('/Ac/In/1/CurrentLimit GetMax',      -1)
+	#dbusservice.add_path('/Ac/In/1/CurrentLimit GetMin',      -1)
+	#dbusservice.add_path('/Ac/In/1/CurrentLimit GetMax',      -1)
 	dbusservice.add_path('/Ac/In/1/CurrentLimitIsAdjustable',  0)      # since this is no victron device
 	dbusservice.add_path('/Ac/In/1/Type',                     -1)      # AC IN1 type: 0 (Not used), 1 (Grid), 2(Generator), 3(Shore)
 	# AC Output measurements
@@ -138,8 +138,8 @@ if args.victron:
 	dbusservice.add_path('/Raw/Ac/In/1/L1/I',                     -1)
 	dbusservice.add_path('/Raw/Ac/In/1/L1/P',                     -1)
 	dbusservice.add_path('/Raw/Ac/In/1/CurrentLimit',             -1)
-	dbusservice.add_path('/Raw/Ac/In/1/CurrentLimit GetMin',      -1)
-	dbusservice.add_path('/Raw/Ac/In/1/CurrentLimit GetMax',      -1)
+	#dbusservice.add_path('/Raw/Ac/In/1/CurrentLimit GetMin',      -1)
+	#dbusservice.add_path('/Raw/Ac/In/1/CurrentLimit GetMax',      -1)
 	dbusservice.add_path('/Raw/Ac/In/1/CurrentLimitIsAdjustable',  0)      # since this is no victron device
 	dbusservice.add_path('/Raw/Ac/In/1/Type',                     -1)      # AC IN1 type: 0 (Not used), 1 (Grid), 2(Generator), 3(Shore)
 	dbusservice.add_path('/Raw/Ac/Out/L1/V',                      -1)
