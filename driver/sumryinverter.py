@@ -21,7 +21,7 @@ time.tzset()
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',
-    level=logging.DEBUG #INFO,
+    level=logging.DEBUG, #INFO,
     datefmt='%Y-%m-%d %H:%M:%S')
     # filename='log.txt')
 
@@ -116,7 +116,7 @@ if args.victron:
 	dbusservice.add_path('/Ac/NumberOfAcInputs',               1)
 	# Generic alarms: (For all alarms: 0=OK; 1=Warning; 2=Alarm)
 	dbusservice.add_path('/Alarms/LowSoc',                     -1)      # Low state of charge
- 	dbusservice.add_path('/Alarms/LowVoltage',                 -1)      # Low battery voltage
+	dbusservice.add_path('/Alarms/LowVoltage',                 -1)      # Low battery voltage
 	dbusservice.add_path('/Alarms/HighVoltage',                -1)      # High battery voltage
 	dbusservice.add_path('/Alarms/LowVoltageAcOut',            -1)      # Low AC Out voltage
 	dbusservice.add_path('/Alarms/HighVoltageAcOut',           -1)      # High AC Out voltage
@@ -150,7 +150,7 @@ if args.victron:
 	dbusservice.add_path('/Raw/Ac/NumberOfPhases',                 1)
 	dbusservice.add_path('/Raw/Ac/NumberOfAcInputs',               1)
 	dbusservice.add_path('/Raw/Alarms/LowSoc',                     -1)      # Low state of charge
- 	dbusservice.add_path('/Raw/Alarms/LowVoltage',                 -1)      # Low battery voltage
+	dbusservice.add_path('/Raw/Alarms/LowVoltage',                 -1)      # Low battery voltage
 	dbusservice.add_path('/Raw/Alarms/HighVoltage',                -1)      # High battery voltage
 	dbusservice.add_path('/Raw/Alarms/LowVoltageAcOut',            -1)      # Low AC Out voltage
 	dbusservice.add_path('/Raw/Alarms/HighVoltageAcOut',           -1)      # High AC Out voltage
@@ -429,7 +429,7 @@ def reset_alarms_values():
 	INVERTER_STATUS['alarms']['high_AC_out_voltage']['text']  = ""
 	INVERTER_STATUS['alarms']['high_device_temperature']['value'] = -1
 	INVERTER_STATUS['alarms']['high_device_temperature']['text']  = ""
-	INVERTER_STATUS['alarms']['inverter_overload]['value'] = -1
+	INVERTER_STATUS['alarms']['inverter_overload']['value'] = -1
 	INVERTER_STATUS['alarms']['inverter_overload']['text']  = ""
 	INVERTER_STATUS['alarms']['high_DC_ripple']['value'] = -1
 	INVERTER_STATUS['alarms']['high_DC_ripple']['text']  = ""
