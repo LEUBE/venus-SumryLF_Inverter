@@ -19,6 +19,9 @@ import traceback
 os.environ['TZ'] = 'Europe/Berlin'
 time.tzset()
 
+baud_rates = [75, 110, 300, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200]
+USB_devices = ["/dev/ttyUSB0", "/dev/ttyUSB1", "/dev/ttyUSB2"]
+
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',
     level=logging.DEBUG, #INFO,
@@ -165,41 +168,32 @@ if args.victron:
 	dbusservice.add_path('/Raw/Info/UpdateTimestamp',             -1)
 
 
-try:
-
-	logging.info("Open serial port " + args.device)
-	serial_port = serial.Serial(args.device, 115200, timeout=1)
-
-except Exception as e:
-	print(e);
-	print(traceback.format_exc())
-	
-	logging.info("Serial port failed at " + args.device)
-
-	# try /dev/ttyUSB1, if /dev/ttyUSB0 is
-	# blocked because of a shutdown
-	if (args.device == "/dev/ttyUSB0"):
+for USB_device in USB_devices
+	for baud_rate in baud_rates:
 		try:
 
-			new_device = "/dev/ttyUSB1"
-			logging.info("Open serial port " + new_device)
-			serial_port = serial.Serial(new_device, 115200, timeout=1)
+			logging.info("Open serial port " + USB_device + " at " + baud_rate + " BPS")
+			serial_port = serial.Serial(USB_device, baud_rate, timeout=1)
+				
+			if (serial_port.in_waiting > 0):
+				logging.debug("Data Waiting [" + str(serial_port.in_waiting) + " bytes]")
+			else:
+				logging.debug("No data waiting at serial port " + USB_device + " at " + baud_rate + " BPS")
 
 		except Exception as e:
-
 			print(e);
 			print(traceback.format_exc())
 	
-			logging.info("Serial port failed at " + new_device)
+			logging.info("Serial port failed at " + USB_device + " at " + baud_rate + " BPS")
 
-			quit()
-
+			if (USB_device == USB_devices[-1]):
+				quit()
 		else:
 			dbusservice['/Alarms/InternalFailure'] = 1
-			
-	else:
-		quit()
-
+			if (USB_device == USB_devices[-1]):
+				quit()
+		serial_port.flushInput()
+		serial_port.close()
 
 serial_port.flushInput()
 logging.info(serial_port.name)
