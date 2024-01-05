@@ -34,7 +34,7 @@ driver = {
 	'id'          : 0x01,
 	'version'     : 0.0,
 	'serial'      : "0000000000",
-	'connection'  : "com.victronenergy.multi.ttyUSB1"
+	'connection'  : "com.victronenergy.multi.ttySMRYINV01"
 }
 
 logging.info("Starting Sumry Inverter driver " + str(driver['version']))
