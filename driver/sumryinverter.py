@@ -170,7 +170,7 @@ if args.victron:
 best_port=""
 best_rate=0
 best_length=0
-for USB_device in USB_devices
+for USB_device in USB_devices:
 	for baud_rate in baud_rates:
 		try:
 
@@ -178,7 +178,7 @@ for USB_device in USB_devices
 			serial_port = serial.Serial(port=USB_device, baudrate=baud_rate, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
 			serialString = ""  # Used to hold data coming over UART
 			time.sleep(2)      #allow some time for data to come in
-   			if serial_port.in_waiting > 0:
+			if serial_port.in_waiting > 0:
        				# Try to read and print the contents of the serial data
 				try:
 					serialString = serial_port.read(100)
@@ -190,7 +190,7 @@ for USB_device in USB_devices
 				except:
 					logging.debug("Failed while reading from serial port " + serial_port.name + " at " + baud_rate + " BPS")
 					pass
-			else
+			else:
 				logging.debug("No data waiting at serial port " + serial_port.name + " at " + baud_rate + " BPS")
 
 
