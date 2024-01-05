@@ -167,33 +167,52 @@ if args.victron:
 	dbusservice.add_path('/Raw/State',                            -1)      # Charger state: 0=Off, 2=Fault, 3=Bulk, 4=Absorption, 5=Float, 6=Storage, 7=Equalize, 8=Passthrough, 9=Inverting, 245=Wake-up, 25-=Blocked, 252=External control
 	dbusservice.add_path('/Raw/Info/UpdateTimestamp',             -1)
 
-
+best_port=""
+best_rate=0
+best_length=0
 for USB_device in USB_devices
 	for baud_rate in baud_rates:
 		try:
 
 			logging.info("Open serial port " + USB_device + " at " + baud_rate + " BPS")
-			serial_port = serial.Serial(USB_device, baud_rate, timeout=1)
-				
-			if (serial_port.in_waiting > 0):
-				logging.debug("Data Waiting [" + str(serial_port.in_waiting) + " bytes]")
-			else:
-				logging.debug("No data waiting at serial port " + USB_device + " at " + baud_rate + " BPS")
+			serial_port = serial.Serial(port=USB_device, baudrate=baud_rate, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
+			serialString = ""  # Used to hold data coming over UART
+			time.sleep(2)      #allow some time for data to come in
+   			if serial_port.in_waiting > 0:
+       				# Try to read and print the contents of the serial data
+				try:
+					serialString = serial_port.read(100)
+					logging.debug("Data waiting [" + serialString.decode("Ascii") + " bytes]")
+					if (len(serialString) > best_length):
+						best_port = USB_device
+						best_rate = baud_rate
+						best_length = len(serialString)
+				except:
+					logging.debug("Failed while reading from serial port " + serial_port.name + " at " + baud_rate + " BPS")
+					pass
+			else
+				logging.debug("No data waiting at serial port " + serial_port.name + " at " + baud_rate + " BPS")
+
 
 		except Exception as e:
 			print(e);
 			print(traceback.format_exc())
 	
-			logging.info("Serial port failed at " + USB_device + " at " + baud_rate + " BPS")
+			logging.info("Serial port failed to open at " + USB_device + " at " + baud_rate + " BPS")
 
-			if (USB_device == USB_devices[-1]):
+			if (USB_device == USB_devices[-1] and baud_rate == baud_rates[-1]):
 				quit()
 		else:
 			dbusservice['/Alarms/InternalFailure'] = 1
-			if (USB_device == USB_devices[-1]):
+			if (USB_device == USB_devices[-1] and baud_rate == baud_rates[-1]):
 				quit()
 		serial_port.flushInput()
 		serial_port.close()
+
+if (best_length > 0):
+	serial_port = serial.Serial(port=best_port, baudrate=best_rate, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
+else:
+	quit()
 
 serial_port.flushInput()
 logging.info(serial_port.name)
