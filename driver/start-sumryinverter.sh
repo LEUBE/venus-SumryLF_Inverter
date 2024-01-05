@@ -9,6 +9,6 @@
 
 . /opt/victronenergy/serial-starter/run-service.sh
 
-ln -s /dev/$tty /dev/ttyUSB2
+ln -s /dev/$tty /dev/ttySMRYINV01
 app="/usr/bin/python /opt/victronenergy/sumryinverter/sumryinverter.py"
 start -d /dev/$tty --victron
