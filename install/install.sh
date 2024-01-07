@@ -22,18 +22,18 @@ then
 	sed -i  '/service.*imt.*dbus-imt-si-rs485tc/a service sumryinverter	dbus-sumry-inverter' /etc/venus/serial-starter.conf
 
 	echo "Install Sumry driver"
-	mkdir -p /var/log/sumryinverter
-	mkdir -p /opt/victronenergy/sumryinverter
-	cp -R venus-sumryinverter-master/ext /opt/victronenergy/sumryinverter
-	cp -R venus-sumryinverter-master/driver/* /opt/victronenergy/sumryinverter
+	mkdir -p /var/log/dbus-sumry-inverter
+	mkdir -p /opt/victronenergy/dbus-sumry-inverter
+	cp -R venus-sumryinverter-master/ext /opt/victronenergy/dbus-sumry-inverter
+	cp -R venus-sumryinverter-master/driver/* /opt/victronenergy/dbus-sumry-inverter
 
-	chmod +x /opt/victronenergy/sumryinverter/start-sumryinverter.sh
-	chmod +x /opt/victronenergy/sumryinverter/sumryinverter.py
-	chmod +x /opt/victronenergy/sumryinverter/service/run
-	chmod +x /opt/victronenergy/sumryinverter/service/log/run
+	chmod +x /opt/victronenergy/dbus-sumry-inverter/start-sumryinverter.sh
+	chmod +x /opt/victronenergy/dbus-sumry-inverter/sumryinverter.py
+	chmod +x /opt/victronenergy/dbus-sumry-inverter/service/run
+	chmod +x /opt/victronenergy/dbus-sumry-inverter/service/log/run
 
-	ln -s /opt/victronenergy/sumryinverter/service /opt/victronenergy/service/sumryinverter
-	ln -s /opt/victronenergy/sumryinverter/service /opt/victronenergy/service-templates/sumryinverter
+	ln -s /opt/victronenergy/dbus-sumry-inverter/service /opt/victronenergy/service/sumryinverter
+	ln -s /opt/victronenergy/dbus-sumry-inverter/service /opt/victronenergy/service-templates/sumryinverter
 
 	#echo "Copy gui files" This should not be necessary as the inverter will use the standard GUI
 
