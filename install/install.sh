@@ -32,8 +32,8 @@ then
 	chmod +x /opt/victronenergy/dbus-sumry-inverter/service/run
 	chmod +x /opt/victronenergy/dbus-sumry-inverter/service/log/run
 
-	ln -s /opt/victronenergy/dbus-sumry-inverter/service /opt/victronenergy/service/sumryinverter
-	ln -s /opt/victronenergy/dbus-sumry-inverter/service /opt/victronenergy/service-templates/sumryinverter
+	ln -s /opt/victronenergy/dbus-sumry-inverter/service /opt/victronenergy/service/dbus-sumry-inverter
+	ln -s /opt/victronenergy/dbus-sumry-inverter/service /opt/victronenergy/service-templates/dbus-sumry-inverter
 
 	#echo "Copy gui files" This should not be necessary as the inverter will use the standard GUI
 
