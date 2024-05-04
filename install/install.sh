@@ -18,8 +18,8 @@ then
 	cp -R velib_python-master/* venus-sumryinverter-master/ext/velib_python
 
 	echo "Add Sumry entries to serial-starter"
-	sed -i  '$aAction=="add", ENV{ID_BUS}=="usb", ENV{ID_SERIAL}=="FTDI_FT232R_USB_UART_A100LZBC",          ENV{VE_SERVICE}="sumryinverter"' /etc/udev/rules.d/serial-starter.rules
-	sed -i  '/service.*imt.*dbus-imt-si-rs485tc/a service sumryinverter	dbus-sumry-inverter' /etc/venus/serial-starter.conf
+	sed -i  '$aAction=="add", ENV{ID_BUS}=="usb", ENV{ID_SERIAL}=="FTDI_FT232R_USB_UART_A100LZBC",          ENV{VE_SERVICE}="sumry"' /etc/udev/rules.d/serial-starter.rules
+	sed -i  '/service.*imt.*dbus-imt-si-rs485tc/a service sumry	dbus-sumryinverter' /etc/venus/serial-starter.conf
 
 	echo "Install Sumry driver"
 	mkdir -p /var/log/dbus-sumry-inverter
