@@ -40,6 +40,7 @@ driver = {
 	'version'     : 0.0,
 	'serial'      : "0000000000",
 	'connection'  : "com.victronenergy.multi.ttySMRYINV01"
+	'systemconn'  : "com.victronenergy.system"
 }
 
 logging.info("Starting Sumry Inverter driver " + str(driver['version']))
@@ -64,13 +65,22 @@ if args.victron:
 
 	# Victron packages
 	sys.path.insert(1, os.path.join(os.path.dirname(__file__), './ext/velib_python'))
-	from vedbus import VeDbusService
+	from vedbus import VeDbusService, VeDbusItemImport
 
 
 	from dbus.mainloop.glib import DBusGMainLoop
 	DBusGMainLoop(set_as_default=True)
 
 	dbusservice = VeDbusService(driver['connection'])
+	dbusimport = VeDbusItemImport(driver['systemconn'])
+
+	batttemp = VeDbusItemImport(dbusimport, systemconn, '/Dc/Battery/Temperature')
+	battvol = VeDbusItemImport(dbusimport, systemconn, '/Dc/Battery/Voltage')
+	battpwr = VeDbusItemImport(dbusimport, systemconn, '/Dc/Battery/Power')
+	chgrpwr = VeDbusItemImport(dbusimport, systemconn, '/Dc/Charger/Power')
+	invDCpwr = (chgrpwr - battpwr)
+	invDCcurr = invDCpwr / battvol
+	invACpwr = 0.9 * invDCpwr
 
 	# Create the management objects, as specified in the ccgx dbus-api document
 	dbusservice.add_path('/Mgmt/ProcessName', __file__)
@@ -99,16 +109,16 @@ if args.victron:
 
 	# Create the Sumry Inverter paths
 	# AC Input measurements
-	dbusservice.add_path('/Ac/In/1/L1/V',                     -1)
-	dbusservice.add_path('/Ac/In/1/L1/F',                     -1)
-	dbusservice.add_path('/Ac/In/1/L1/I',                     -1)
-	dbusservice.add_path('/Ac/In/1/L1/P',                     -1)
+	dbusservice.add_path('/Ac/In/1/L1/V',                     230)
+	dbusservice.add_path('/Ac/In/1/L1/F',                     50)
+	dbusservice.add_path('/Ac/In/1/L1/I',                      0)
+	dbusservice.add_path('/Ac/In/1/L1/P',                      0)
 	# AC Input settings
-	dbusservice.add_path('/Ac/In/1/CurrentLimit',             -1)
+	dbusservice.add_path('/Ac/In/1/CurrentLimit',              0)
 	#dbusservice.add_path('/Ac/In/1/CurrentLimit GetMin',      -1)
 	#dbusservice.add_path('/Ac/In/1/CurrentLimit GetMax',      -1)
 	dbusservice.add_path('/Ac/In/1/CurrentLimitIsAdjustable',  0)      # since this is no victron device
-	dbusservice.add_path('/Ac/In/1/Type',                     -1)      # AC IN1 type: 0 (Not used), 1 (Grid), 2(Generator), 3(Shore)
+	dbusservice.add_path('/Ac/In/1/Type',                      0)      # AC IN1 type: 0 (Not used), 1 (Grid), 2(Generator), 3(Shore)
 	# AC Output measurements
 	dbusservice.add_path('/Ac/Out/L1/V',                      -1)
 	dbusservice.add_path('/Ac/Out/L1/F',                      -1)
@@ -120,69 +130,75 @@ if args.victron:
 	dbusservice.add_path('/Ac/NumberOfPhases',                 1)
 	dbusservice.add_path('/Ac/NumberOfAcInputs',               1)
 	# Generic alarms: (For all alarms: 0=OK; 1=Warning; 2=Alarm)
-	dbusservice.add_path('/Alarms/LowSoc',                     -1)      # Low state of charge
-	dbusservice.add_path('/Alarms/LowVoltage',                 -1)      # Low battery voltage
-	dbusservice.add_path('/Alarms/HighVoltage',                -1)      # High battery voltage
-	dbusservice.add_path('/Alarms/LowVoltageAcOut',            -1)      # Low AC Out voltage
-	dbusservice.add_path('/Alarms/HighVoltageAcOut',           -1)      # High AC Out voltage
-	dbusservice.add_path('/Alarms/HighTemperature',            -1)      # High device temperature
-	dbusservice.add_path('/Alarms/Overload',                   -1)      # Inverter overload
-	dbusservice.add_path('/Alarms/Ripple',                     -1)      # High DC ripple
+	dbusservice.add_path('/Alarms/LowSoc',                     0)      # Low state of charge
+	dbusservice.add_path('/Alarms/LowVoltage',                 0)      # Low battery voltage
+	dbusservice.add_path('/Alarms/HighVoltage',                0)      # High battery voltage
+	dbusservice.add_path('/Alarms/LowVoltageAcOut',            0)      # Low AC Out voltage
+	dbusservice.add_path('/Alarms/HighVoltageAcOut',           0)      # High AC Out voltage
+	dbusservice.add_path('/Alarms/HighTemperature',            0)      # High device temperature
+	dbusservice.add_path('/Alarms/Overload',                   0)      # Inverter overload
+	dbusservice.add_path('/Alarms/Ripple',                     0)      # High DC ripple
 	# DC Input measurements
-	dbusservice.add_path('/Dc/0/Voltage',                     -1)	
-	dbusservice.add_path('/Dc/0/Current',                     -1)
-	dbusservice.add_path('/Dc/0/Temperature',                 -1)
+	dbusservice.add_path('/Dc/0/Voltage',                     battvol)	
+	dbusservice.add_path('/Dc/0/Current',                     invDCcurr)
+	dbusservice.add_path('/Dc/0/Temperature',                 batttemp)
 	# Operating mode / state
-	dbusservice.add_path('/Mode',                             -1)      # Position of the switch  1=Charger Only;2=Inverter Only;3=On;4=Off
-	dbusservice.add_path('/State',                            -1)      # Charger state: 0=Off, 2=Fault, 3=Bulk, 4=Absorption, 5=Float, 6=Storage, 7=Equalize, 8=Passthrough, 9=Inverting, 245=Wake-up, 25-=Blocked, 252=External control
-	dbusservice.add_path('/Info/UpdateTimestamp',             -1)
+	dbusservice.add_path('/Mode',                             3)      # Position of the switch  1=Charger Only;2=Inverter Only;3=On;4=Off
+	dbusservice.add_path('/State',                            252)      # Charger state: 0=Off, 2=Fault, 3=Bulk, 4=Absorption, 5=Float, 6=Storage, 7=Equalize, 8=Passthrough, 9=Inverting, 245=Wake-up, 25-=Blocked, 252=External control
+	dbusservice.add_path('/Info/UpdateTimestamp',             0)
 
 	# Create the real values paths
-	dbusservice.add_path('/Raw/Ac/In/1/L1/V',                     -1)
-	dbusservice.add_path('/Raw/Ac/In/1/L1/F',                     -1)
-	dbusservice.add_path('/Raw/Ac/In/1/L1/I',                     -1)
-	dbusservice.add_path('/Raw/Ac/In/1/L1/P',                     -1)
-	dbusservice.add_path('/Raw/Ac/In/1/CurrentLimit',             -1)
+	dbusservice.add_path('/Raw/Ac/In/1/L1/V',                     230)
+	dbusservice.add_path('/Raw/Ac/In/1/L1/F',                     50)
+	dbusservice.add_path('/Raw/Ac/In/1/L1/I',                     0)
+	dbusservice.add_path('/Raw/Ac/In/1/L1/P',                     0)
+	dbusservice.add_path('/Raw/Ac/In/1/CurrentLimit',             16)
 	#dbusservice.add_path('/Raw/Ac/In/1/CurrentLimit GetMin',      -1)
 	#dbusservice.add_path('/Raw/Ac/In/1/CurrentLimit GetMax',      -1)
 	dbusservice.add_path('/Raw/Ac/In/1/CurrentLimitIsAdjustable',  0)      # since this is no victron device
-	dbusservice.add_path('/Raw/Ac/In/1/Type',                     -1)      # AC IN1 type: 0 (Not used), 1 (Grid), 2(Generator), 3(Shore)
-	dbusservice.add_path('/Raw/Ac/Out/L1/V',                      -1)
-	dbusservice.add_path('/Raw/Ac/Out/L1/F',                      -1)
-	dbusservice.add_path('/Raw/Ac/Out/L1/I',                      -1)
-	dbusservice.add_path('/Raw/Ac/Out/L1/P',                      -1)
-	dbusservice.add_path('/Raw/Ac/ActiveIn/ActiveInput',          -1)      # Active input: 0 = ACin-1, 1 = ACin-2,
+	dbusservice.add_path('/Raw/Ac/In/1/Type',                      0)      # AC IN1 type: 0 (Not used), 1 (Grid), 2(Generator), 3(Shore)
+	dbusservice.add_path('/Raw/Ac/Out/L1/V',                       230)
+	dbusservice.add_path('/Raw/Ac/Out/L1/F',                       50)
+	dbusservice.add_path('/Raw/Ac/Out/L1/I',                       0)
+	dbusservice.add_path('/Raw/Ac/Out/L1/P',                       0)
+	dbusservice.add_path('/Raw/Ac/ActiveIn/ActiveInput',           0)      # Active input: 0 = ACin-1, 1 = ACin-2,
 	dbusservice.add_path('/Raw/Ac/NumberOfPhases',                 1)
 	dbusservice.add_path('/Raw/Ac/NumberOfAcInputs',               1)
-	dbusservice.add_path('/Raw/Alarms/LowSoc',                     -1)      # Low state of charge
-	dbusservice.add_path('/Raw/Alarms/LowVoltage',                 -1)      # Low battery voltage
-	dbusservice.add_path('/Raw/Alarms/HighVoltage',                -1)      # High battery voltage
-	dbusservice.add_path('/Raw/Alarms/LowVoltageAcOut',            -1)      # Low AC Out voltage
-	dbusservice.add_path('/Raw/Alarms/HighVoltageAcOut',           -1)      # High AC Out voltage
-	dbusservice.add_path('/Raw/Alarms/HighTemperature',            -1)      # High device temperature
-	dbusservice.add_path('/Raw/Alarms/Overload',                   -1)      # Inverter overload
-	dbusservice.add_path('/Raw/Alarms/Ripple',                     -1)      # High DC ripple
-	dbusservice.add_path('/Raw/Dc/0/Voltage',                     -1)	
-	dbusservice.add_path('/Raw/Dc/0/Current',                     -1)
-	dbusservice.add_path('/Raw/Dc/0/Temperature',                 -1)
-	dbusservice.add_path('/Raw/Mode',                             -1)      # Position of the switch  1=Charger Only;2=Inverter Only;3=On;4=Off
-	dbusservice.add_path('/Raw/State',                            -1)      # Charger state: 0=Off, 2=Fault, 3=Bulk, 4=Absorption, 5=Float, 6=Storage, 7=Equalize, 8=Passthrough, 9=Inverting, 245=Wake-up, 25-=Blocked, 252=External control
-	dbusservice.add_path('/Raw/Info/UpdateTimestamp',             -1)
+	dbusservice.add_path('/Raw/Alarms/LowSoc',                     0)      # Low state of charge
+	dbusservice.add_path('/Raw/Alarms/LowVoltage',                 0)      # Low battery voltage
+	dbusservice.add_path('/Raw/Alarms/HighVoltage',                0)      # High battery voltage
+	dbusservice.add_path('/Raw/Alarms/LowVoltageAcOut',            0)      # Low AC Out voltage
+	dbusservice.add_path('/Raw/Alarms/HighVoltageAcOut',           0)      # High AC Out voltage
+	dbusservice.add_path('/Raw/Alarms/HighTemperature',            0)      # High device temperature
+	dbusservice.add_path('/Raw/Alarms/Overload',                   0)      # Inverter overload
+	dbusservice.add_path('/Raw/Alarms/Ripple',                     0)      # High DC ripple
+	dbusservice.add_path('/Raw/Dc/0/Voltage',                      battvol)	
+	dbusservice.add_path('/Raw/Dc/0/Current',                      invDCcurr)
+	dbusservice.add_path('/Raw/Dc/0/Temperature',                  batttemp)
+	dbusservice.add_path('/Raw/Mode',                              3)      # Position of the switch  1=Charger Only;2=Inverter Only;3=On;4=Off
+	dbusservice.add_path('/Raw/State',                             252)      # Charger state: 0=Off, 2=Fault, 3=Bulk, 4=Absorption, 5=Float, 6=Storage, 7=Equalize, 8=Passthrough, 9=Inverting, 245=Wake-up, 25-=Blocked, 252=External control
+	dbusservice.add_path('/Raw/Info/UpdateTimestamp',              0)
 
 try:
 	logging.info("Open serial port " + USB_device) #args.device)
 	serial_port = serial.Serial(port=USB_device, baudrate=baud_rate, bytesize=byte_size, timeout=1, stopbits=stop_bits)
 	serialString = ""  # Used to hold data coming over UART
-	#time.sleep(2)      #allow some time for data to come in
-	#if serial_port.in_waiting > 0:
-	#	try:
-	#		serialString = serial_port.readline
-	#		logging.debug("Data waiting [" + serialString.decode("Ascii") + " bytes]")
-	#	except:
-	#		logging.debug("Failed while reading from serial port")
-	#		pass
-	#else:
-	#	logging.debug("No data waiting at serial port")
+	command = bytearray(b'/x00/xF8/x78/x3C/xFF/x80/x80/x78/x3C/xF0/x00')
+	if serial_port.write(command) > 0:
+		logging.debug("Initially wrote " + command.decode())
+	else:
+		logging.debug("failed to write " + command.decode())
+		serialString = ""  # Used to hold data coming over UART
+		time.sleep(1)      #allow some time for data to come in
+		if serial_port.in_waiting > 0:
+			try:
+				serialString = serial_port.readline
+				logging.debug("Data waiting [" + serialString.decode("Ascii") + " bytes]")
+			except:
+				logging.debug("Failed while reading from serial port")
+				pass
+		else:
+			logging.debug("No data waiting at serial port")
 
 except Exception as e:
 	print(e);
@@ -1319,8 +1335,30 @@ def parse_packet(packet):
 
 
 def handle_serial_data():
+
+	batttemp = VeDbusItemImport(dbusimport, systemconn, '/Dc/Battery/Temperature')
+	battvol = VeDbusItemImport(dbusimport, sysconn, '/Dc/Battery/Voltage')
+	battpwr = VeDbusItemImport(dbusimport, sysconn, '/Dc/Battery/Power')
+	chgrpwr = VeDbusItemImport(dbusimport, sysconn, '/Dc/Charger/Power')
+	invDCpwr = (chgrpwr - battpwr)
+	invACpwr = 0.9 * invDCpwr
+
+	dbusservice["/Ac/Out/L1/I"] = invACpwr/230
+	dbusservice["/Ac/Out/L1/P"] = invACpwr
+	dbusservice["/Dc/0/Voltage"] = battvol
+	dbusservice["/Dc/0/Current"] = invDCpwr
+	dbusservice["/Dc/0/Temperature"] = batttemp
+
 	try:
-		serial_packet = bytearray()
+		serial_packet = bytearray(b'/x00/xF8/x78/x3C/xFF/x80/x80/x78/x3C/xF0/x00')
+
+		byteswritten = serial_port.write(command)
+		if byteswritten > 0:
+			logging.debug("Wrote in handler" + command.decode())
+		else:
+			logging.debug("failed to write in handler" + command.decode())
+
+		time.sleep(1)
 
 		if (serial_port.in_waiting > 0):
 			logging.debug("Data Waiting [" + str(serial_port.in_waiting) + " bytes]")
@@ -1340,7 +1378,7 @@ def handle_serial_data():
 		if args.victron:	
 			# recheck every second
 			gobject.timeout_add(1000, handle_serial_data)
-		
+	
 
 	except KeyboardInterrupt:
 		if not args.victron:
