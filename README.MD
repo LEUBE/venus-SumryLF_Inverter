@@ -1,4 +1,6 @@
- # License
+# WARNING: UNFINISHED PROJECT, DOES NOT WORK
+
+# License
  - MIT License
  - Use this project at your own risk
 
